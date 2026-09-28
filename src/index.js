@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import eventRoutes from "./routes/eventRoutes.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
 import errorHandlerMiddleware from "./middlewares/errorandlerMiddleware.js";
 
 const app = express()
@@ -18,6 +19,7 @@ app.use(express.json());
 
 app.use("/api/v1/auth", authRoutes)
 app.use("/api/v1/events", eventRoutes)
+app.use("/api/v1/bookings", bookingRoutes)
 
 app.use(errorHandlerMiddleware)
 

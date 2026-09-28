@@ -1,7 +1,7 @@
-import pool from "../config/db.js";
+import db from "../config/db.js";
 
 export async function up() {
-  await pool.query(`
+  await db.query(`
     CREATE TABLE IF NOT EXISTS refresh_tokens (
       id SERIAL PRIMARY KEY,
       user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -13,7 +13,7 @@ export async function up() {
 }
 
 export async function down() {
-  await pool.query(`DROP TABLE IF EXISTS refresh_tokens;`);
+  await db.query(`DROP TABLE IF EXISTS refresh_tokens;`);
 }
 
 up()
