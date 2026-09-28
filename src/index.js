@@ -1,11 +1,24 @@
 import express from "express";
+import cors from "cors";
+import authRoutes from "./routes/authRoutes.js";
+import eventRoutes from "./routes/eventRoutes.js";
+import errorHandlerMiddleware from "./middlewares/errorandlerMiddleware.js";
 
 const app = express()
 const port = process.env.PORT || 3000
 
-app.post("/api/v1/tickets", (req, res) => {
-    // age = req.body(age)
-    res.send(`Hi there what do you want ?? mr years old`)
-})
+// Allow all origins (or configure specifically for your mobile app)
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
-app.listen(port, () => console.log(`Server listening on port ${port}`))
+app.use(express.json());
+
+app.use("/api/v1/auth", authRoutes)
+app.use("/api/v1/events", eventRoutes)
+
+app.use(errorHandlerMiddleware)
+
+app.listen(port, () => console.log(`Server listening on port ${port}...`))
