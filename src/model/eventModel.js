@@ -19,18 +19,16 @@ export function formatEvent(row) {
 }
 
 export const EventModel = {
-    async getAll (organizerId) {
-        const values = [organizerId];
+    async getAll (userId) {
+        const values = [userId];
         const condition = ["organizer_id = $1"]
         // condition.push(['organiser_id = '])
         const whereClause = 
             condition.length > 0 ? `WHERE ${condition.join("AND")}` : "";
         const query =  `
         SELECT * FROM events 
-        ${whereClause}
         `
-
-        const result = await db.query(query, values)
+        const result = await db.query(query)
         return result.rows.map(formatEvent)
     },
 

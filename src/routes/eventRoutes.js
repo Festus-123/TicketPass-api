@@ -5,11 +5,13 @@ import { organizerMiddleware } from "../middlewares/eventMiddleware.js";
 
 const router = Router();
 
-router.use(authMiddleware, organizerMiddleware);
+router.use(authMiddleware);
 
 router.get("/", EventController.getEvents);
 
 router.get("/:id", EventController.getEventById);
+
+router.use(organizerMiddleware)
 
 router.post("/", EventController.createEvent);
 

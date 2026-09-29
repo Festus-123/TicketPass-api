@@ -3,8 +3,7 @@ import { EventService } from "../services/eventService.js";
 export const EventController = {
   async getEvents(req, res, next) {
     try {
-      const organizerId = req.user.id;
-      const result = await EventService.getAllEvents(organizerId)
+      const result = await EventService.getAllEvents()
       res.status(200).json(result);
     } catch (error) {
       next(error);
@@ -14,8 +13,7 @@ export const EventController = {
   async getEventById(req, res, next) {
     try {
       const eventId = parseInt(req.params.id);
-      const organizerId = req.user.id;
-      const result = await EventService.getEventById(eventId, organizerId)
+      const result = await EventService.getEventById(eventId)
       res.status(200).json(result)
     } catch (error) {
         next(error)

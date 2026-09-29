@@ -1,10 +1,10 @@
+import { BookingService } from "../services/bookingService.js";
 
 export const BookingController = {
-    async getAllbooking (req, res, next) {
-        try {            
-            const userId = req.user.id;
-            res.send("Hi controller here handling your bookings")
-            res.status(200).json()
+    async getAllBokking (req, res, next) {
+        try {
+            const result = await BookingService.getAllBookings()
+            res.status(200).json(result)
         } catch (error) {
             next(error)
         }
@@ -12,9 +12,20 @@ export const BookingController = {
 
     async getAllMybBooking (req, res, next) {
         try {
-            const user_id = req.user.id;
-            res.send("Hi your controller here hanling your personal bookings")
-            res.status(200).json()
+            const userId = req.user.id;
+            const result = await BookingService.getAllMyBookings(userId)
+            res.status(200).json(result)
+        } catch (error) {
+            next(error)
+        }
+    },
+
+    async getBookingById (req, res, next) {
+        try {
+            const bookingId = parseInt(req.params.id)
+            const userId = req.user.id;
+            const result = await BookingService.getBookingById(bookingId, userId)
+            res.status(200).json(result)
         } catch (error) {
             next(error)
         }
@@ -22,8 +33,10 @@ export const BookingController = {
 
     async BookTicket (req, res, next) {
         try {
-            const { eventId, userId, events, seatsBooked, status} = req.body;
-            res.send("Hi yor controller here handling all your request")
+            const userId = req.user.id
+            const payload = req.body
+            const result = await BookingService.createBooking({...payload, userId})
+            res.status(200).json(result)
         } catch (error) {
             next(error)
         }

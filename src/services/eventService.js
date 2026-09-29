@@ -3,14 +3,14 @@ import { CustomError} from "../utils/customError.js"
 import { ERROR_MESSAGES} from "../utils/errorMessages.js"
 
 export const EventService = {
-    async getAllEvents (organizerId) {
-        return EventModel.getAll(organizerId)
+    async getAllEvents () {
+        return EventModel.getAll()
     },
 
-    async getEventById (eventId, organizerId) {
+    async getEventById (eventId, ) {
         const event = await EventModel.findById(eventId);
     if (!event) throw new CustomError(ERROR_MESSAGES.NOT_FOUND, 404);
-    if (event.organizer_id !== organizerId) throw new CustomError(ERROR_MESSAGES.FORBIDDEN, 403);
+    // if (event.organizer_id !== organizerId) throw new CustomError(ERROR_MESSAGES.FORBIDDEN, 403);
     return formatEvent(event)
     },
 

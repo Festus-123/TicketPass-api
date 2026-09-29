@@ -1,14 +1,18 @@
 import { Router } from "express";
 import { authMiddleware } from "../middlewares/authMidlewares.js";
 import { BookingController } from "../controllers/bookingControler.js";
+import { bookingMiddleware } from "../middlewares/bookingMiddleware.js";
+import { organizerMiddleware } from "../middlewares/eventMiddleware.js";
 
 const router = Router();
 
-router.use(authMiddleware);
+router.get("/", authMiddleware, organizerMiddleware, BookingController.getAllBokking)
 
-router.get("/", BookingController.getAllbooking)
+router.use(authMiddleware, bookingMiddleware);
 
 router.get("/my-bookings", BookingController.getAllMybBooking)
+
+router.get("/:id", BookingController.getBookingById)
 
 router.post("/", BookingController.BookTicket)
 
