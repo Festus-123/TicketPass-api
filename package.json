@@ -4,7 +4,7 @@
   "description": "A simple Api built for a reminder app",
   "main": "index.js",
   "scripts": {
-    "test": "vitest run",
+    "test": "dotenv -e .env.test -- vitest run",
     "start": "node src/index.js",
     "dev": "nodemon --env-file=.env src/index.js"
   },
@@ -30,6 +30,7 @@
     "zod": "^4.5.4"
   },
   "devDependencies": {
+    "dotenv-cli": "^11.0.0",
     "supertest": "^7.2.2",
     "vitest": "^5.0.0"
   }
