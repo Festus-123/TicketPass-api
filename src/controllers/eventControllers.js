@@ -33,7 +33,26 @@ export const EventController = {
     }
   },
 
-  async updateEvent() {},
+  async updateEvent(req, res, next) {
+    try {
+      const eventId = parseInt(req.params.id, 10)
+      const userId = req.user.id;
+      const payload = req.body;
+      const result = await EventService.updateEvent(eventId, payload, userId)
+      res.status(200).json(result)
+    } catch (error) {
+      next(error)
+    }
+  },
 
-  async deleteEvent() {},
+  async deleteEvent(req, res, next) {
+    try {
+      const userId = req.user.id;
+      const eventId = parseInt(req.params.id, 10)
+      const result = await EventService.deleteEvent(eventId, userId)
+      res.status(200).json(result)
+    } catch (error) {
+      next(error)
+    }
+  },
 };

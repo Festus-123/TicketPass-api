@@ -40,5 +40,28 @@ export const BookingController = {
         } catch (error) {
             next(error)
         }
+    },
+
+    async updateTicket (req, res, next) {
+        try {
+            const tickedId = req.params.id
+            const userId = req.user.id
+            const payload = req.body
+            const result = await BookingService.updateBooking(tickedId, payload, userId)
+            res.status(200).json(result)
+        } catch (error) {
+            next(error)
+        }
+    },
+
+    async deleteTicket (req, res, next) {
+        try {
+            const userId = req.user.id
+            const ticketId =req.params.id
+            const result = await BookingService.deleteBooking(ticketId, userId)
+            res.status(200).json(result)
+        } catch (error) {
+            next(error)
+        }
     }
 }

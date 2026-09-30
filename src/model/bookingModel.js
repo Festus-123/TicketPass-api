@@ -15,38 +15,80 @@ export function formatBooking(row) {
 }
 
 export const BookingModel = {
-    async getAll () {
-        const query = `
+  async getAll() {
+    const query = `
             SELECT * FROM bookings
-        `
+        `;
+    const result = await db.query(query);
+    return result.rows.map(formatBooking);
+  },
 
-        const result = await db.query(query)
-        return result.rows.map(formatBooking)
-    },
-
-    async getAllMy (userId) {
-        const values = [userId];
-        const condition = ["user_id = $1"]
-        const whereClause = 
-            condition.length > 0 ?  `WHERE ${condition.join("AND")}` : "";
-        const query = `
+  async getAllMy(userId) {
+    const values = [userId];
+    const condition = ["user_id = $1"];
+    const whereClause =
+      condition.length > 0 ? `WHERE ${condition.join("AND")}` : "";
+    const query = `
             SELECT * FROM bookings
             ${whereClause}
-        `
+        `;
 
-        const result = await db.query(query, values)
-        return result.rows.map(formatBooking)
-    },
+    const result = await db.query(query, values);
+    return result.rows.map(formatBooking);
+  },
 
-    async findById (id) {
-        const result = await db.query('SELECT * FROM bookings WHERE id = $1', [id])
-        return result.rows[0]
-    },
+  async findById(id) {
+    const result = await db.query("SELECT * FROM bookings WHERE id = $1", [id]);
+    return result.rows[0];
+  },
 
-    async create ({event_id, user_id, seats_booked, total_amount, status }) {
-        const result = await db.query(`
-            INSERT INTO bookings (event_id, user_id, seats_booked, total_amount, status) VALUES ($1, $2, $3, $4, $5) 
-            RETURNING * `, [event_id, user_id, seats_booked, total_amount, status])
-        return formatBooking(result.rows[0]);
+  async create({ event_id, user_id, seats_booked, total_amount, status }) {
+    const result = await db.query(
+      `
+        INSERT INTO bookings (event_id, user_id, seats_booked, total_amount, status) VALUES ($1, $2, $3, $4, $5) 
+        RETURNING * `,
+      [event_id, user_id, seats_booked, total_amount, status],
+    );
+    return formatBooking(result.rows[0]);
+  },
+
+  async update({ id, payload }) {
+    const fieldMapping = {
+      event_id: "event_id",
+      seats_booked: "seats_booked",
+      status: "status",
+    };
+
+    const setClause = [];
+    const values = [];
+
+    for (const [key, val] of Object.entries(payload)) {
+      const dbColumn = fieldMapping[key];
+      if (dbColumn !== undefined) {
+        values.push(val);
+        setClause.push(`${dbColumn} = $${values.length}`);
+      }
     }
-}
+
+    if (setClause.length === 0) {
+      const exists = await this.findById(id);
+      return formatBooking(exists);
+    }
+
+    values.push(id);
+    const query = `
+        UPDATE bookings
+        SET ${setClause.join(", ")}
+        WHERE id = $${values.length}
+        RETURNING *
+        `;
+
+    const result = await db.query(query, values);
+    return formatBooking(result.rows[0]);
+  },
+
+  async delete(id) {
+    const result = await db.query("DELETE FROM bookings WHERE id = $1", [id]);
+    return result.rowCount;
+  },
+};

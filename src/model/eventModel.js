@@ -19,12 +19,7 @@ export function formatEvent(row) {
 }
 
 export const EventModel = {
-    async getAll (userId) {
-        const values = [userId];
-        const condition = ["organizer_id = $1"]
-        // condition.push(['organiser_id = '])
-        const whereClause = 
-            condition.length > 0 ? `WHERE ${condition.join("AND")}` : "";
+    async getAll () {
         const query =  `
         SELECT * FROM events 
         `
@@ -45,5 +40,49 @@ export const EventModel = {
             `, [organizer_id, title, description, venue, event_date, ticket_price, total_seats, available_seats]
         );
         return formatEvent(result.rows[0])
+    },
+
+    async update (id, newValues) {
+        const fieldMapping = {
+            title: "title",
+            description: "description",
+            venue: "venue",
+            event_date: "event_date",
+            ticket_price: "ticket_price",
+            total_seats: "total_seats",
+            available_seats: "available_seats"
+        }
+
+        const setClause = [];
+        const values = [];
+
+        for (const [key, val] of Object.entries(newValues)) {
+            const dbColumn = fieldMapping[key]
+            if(dbColumn != undefined) {
+                values.push(val)
+                setClause.push(`${dbColumn} = $${values.length}`)
+            }
+        }
+
+        if (setClause.length === 0) {
+            const exists = this.findById(id);
+            return formatEvent(exists)
+        }
+
+        values.push(id)
+        const query = `
+        UPDATE events 
+        SET ${setClause.join(", ")}
+        WHERE id = $${values.length}
+        RETURNING *
+        `;
+
+        const result = await db.query(query, values);
+        return formatEvent(result.rows[0]);
+    },
+
+    async delete (id) {
+        const result = await db.query('DELETE FROM events WHERE id = $1', [id])
+        return result.rowCount;
     }
 }
