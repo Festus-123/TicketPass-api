@@ -100,17 +100,17 @@ NODE_ENV=test
 Create the schema in that test database with the same migration commands, replacing `--env-file=.env` with `--env-file=.env.test`. Then run tests with:
 
 ```sh
-node --env-file=.env.test node_modules/vitest/vitest.mjs run
+npm test
 ```
 
 To run only one suite:
 
 ```sh
-node --env-file=.env.test node_modules/vitest/vitest.mjs run tests/events.test.js
-node --env-file=.env.test node_modules/vitest/vitest.mjs run tests/booking.test.js
+npm test -- tests/events.test.js
+npm test -- tests/booking.test.js
 ```
 
-`npm test` runs Vitest but does not load an env file by itself. On a machine without a database configured through the process environment, use the explicit `.env.test` command above.
+`npm test` requires `.env.test` and loads it explicitly. It does not load `.env`, so test runs cannot silently fall back to your application database. The GitHub Actions workflow creates the ignored `.env.test` file from its `TEST_DATABASE_URL` and `TEST_JWT_SECRET` secrets before running the suite.
 
 ## Run the API
 
