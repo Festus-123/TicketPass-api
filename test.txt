@@ -1,4 +1,0 @@
-"name": "festus",
-  "email": "test@example.com",
-  "password": "123456",
-  "role": "attendee"
