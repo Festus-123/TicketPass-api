@@ -33,14 +33,14 @@ Create a local `.env` file in the repository root. `.env*` files are ignored by 
 
 The application reads these variables:
 
-| Variable | Required | Purpose | Example |
-| --- | --- | --- | --- |
-| `PORT` | No | HTTP port. Defaults to `3000`. | `PORT=3000` |
-| `DATABASE_URL` | Yes | PostgreSQL connection string. | `DATABASE_URL=postgresql://user:password@localhost:5432/ticketpass` |
-| `JWT_SECRET` | Yes | Secret used to sign and verify access tokens. Use a high-entropy random value. | `JWT_SECRET=replace-with-a-random-secret` |
-| `ACCESS_TOKEN_EXPIRY` | Yes | JWT access-token lifetime accepted by `jsonwebtoken`. | `ACCESS_TOKEN_EXPIRY=15m` |
-| `REFRESH_TOKEN_TILL_DAYS` | No | Refresh-token lifetime in days. Defaults to `30`. | `REFRESH_TOKEN_TILL_DAYS=30` |
-| `NODE_ENV` | No | Runtime mode; `production` enables TLS certificate configuration in the database pool. | `NODE_ENV=development` |
+| Variable                  | Required | Purpose                                                                                | Example                                                             |
+| ------------------------- | -------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `PORT`                    | No       | HTTP port. Defaults to `3000`.                                                         | `PORT=3000`                                                         |
+| `DATABASE_URL`            | Yes      | PostgreSQL connection string.                                                          | `DATABASE_URL=postgresql://user:password@localhost:5432/ticketpass` |
+| `JWT_SECRET`              | Yes      | Secret used to sign and verify access tokens. Use a high-entropy random value.         | `JWT_SECRET=replace-with-a-random-secret`                           |
+| `ACCESS_TOKEN_EXPIRY`     | Yes      | JWT access-token lifetime accepted by `jsonwebtoken`.                                  | `ACCESS_TOKEN_EXPIRY=15m`                                           |
+| `REFRESH_TOKEN_TILL_DAYS` | No       | Refresh-token lifetime in days. Defaults to `30`.                                      | `REFRESH_TOKEN_TILL_DAYS=30`                                        |
+| `NODE_ENV`                | No       | Runtime mode; `production` enables TLS certificate configuration in the database pool. | `NODE_ENV=development`                                              |
 
 Example `.env` layout (replace every placeholder with your own values):
 
@@ -157,10 +157,10 @@ Content-Type: application/json
 
 ```json
 {
-	"name": "Alex Morgan",
-	"email": "alex@example.com",
-	"password": "choose-a-strong-password",
-	"role": "attendee"
+  "name": "Alex Morgan",
+  "email": "alex@example.com",
+  "password": "choose-a-strong-password",
+  "role": "attendee"
 }
 ```
 
@@ -175,8 +175,8 @@ Content-Type: application/json
 
 ```json
 {
-	"email": "alex@example.com",
-	"password": "choose-a-strong-password"
+  "email": "alex@example.com",
+  "password": "choose-a-strong-password"
 }
 ```
 
@@ -193,7 +193,7 @@ Content-Type: application/json
 
 ```json
 {
-	"refreshToken": "CURRENT_REFRESH_TOKEN"
+  "refreshToken": "CURRENT_REFRESH_TOKEN"
 }
 ```
 
@@ -205,13 +205,13 @@ All routes are prefixed with `/api/v1`. Unless marked public, send a Bearer acce
 
 ### Events
 
-| Method and path | Access | Description |
-| --- | --- | --- |
-| `GET /events` | Any authenticated user | List events. |
-| `GET /events/:id` | Any authenticated user | Fetch one event. |
-| `POST /events` | Organizer | Create an event. The authenticated organizer becomes its owner. |
-| `PATCH /events/:id` | Owning organizer | Update event fields. |
-| `DELETE /events/:id` | Owning organizer | Delete an event. |
+| Method and path      | Access                 | Description                                                     |
+| -------------------- | ---------------------- | --------------------------------------------------------------- |
+| `GET /events`        | Any authenticated user | List events.                                                    |
+| `GET /events/:id`    | Any authenticated user | Fetch one event.                                                |
+| `POST /events`       | Organizer              | Create an event. The authenticated organizer becomes its owner. |
+| `PATCH /events/:id`  | Owning organizer       | Update event fields.                                            |
+| `DELETE /events/:id` | Owning organizer       | Delete an event.                                                |
 
 Create event example:
 
@@ -223,12 +223,12 @@ Content-Type: application/json
 
 ```json
 {
-	"title": "Live at Test Hall",
-	"description": "An evening performance",
-	"venue": "Test Hall",
-	"event_date": "2030-12-31T19:00:00.000Z",
-	"ticket_price": 35,
-	"total_seats": 120
+  "title": "Live at Test Hall",
+  "description": "An evening performance",
+  "venue": "Test Hall",
+  "event_date": "2030-12-31T19:00:00.000Z",
+  "ticket_price": 35,
+  "total_seats": 120
 }
 ```
 
@@ -238,8 +238,8 @@ An update can contain one or more supported fields:
 
 ```json
 {
-	"title": "Updated Event Name",
-	"ticket_price": 40
+  "title": "Updated Event Name",
+  "ticket_price": 40
 }
 ```
 
@@ -247,14 +247,14 @@ An organizer may only update or delete events that they own. A different organiz
 
 ### Bookings
 
-| Method and path | Access | Description |
-| --- | --- | --- |
-| `GET /bookings` | Organizer | List bookings across all events and attendees. |
-| `GET /bookings/my-bookings` | Attendee | List the signed-in attendee's bookings. |
-| `GET /bookings/my-bookings/:id` | Booking owner (attendee) | Fetch one of the attendee's bookings. |
-| `POST /bookings` | Attendee | Book seats for an event. |
-| `PATCH /bookings/my-bookings/:id` | Booking owner (attendee) | Change the booking status. |
-| `DELETE /bookings/my-bookings/:id` | Booking owner (attendee) | Delete the booking. |
+| Method and path                    | Access                   | Description                                    |
+| ---------------------------------- | ------------------------ | ---------------------------------------------- |
+| `GET /bookings`                    | Organizer                | List bookings across all events and attendees. |
+| `GET /bookings/my-bookings`        | Attendee                 | List the signed-in attendee's bookings.        |
+| `GET /bookings/my-bookings/:id`    | Booking owner (attendee) | Fetch one of the attendee's bookings.          |
+| `POST /bookings`                   | Attendee                 | Book seats for an event.                       |
+| `PATCH /bookings/my-bookings/:id`  | Booking owner (attendee) | Change the booking status.                     |
+| `DELETE /bookings/my-bookings/:id` | Booking owner (attendee) | Delete the booking.                            |
 
 Create a booking for an existing event:
 
@@ -266,8 +266,8 @@ Content-Type: application/json
 
 ```json
 {
-	"event_id": 12,
-	"seatsBooked": 2
+  "event_id": 12,
+  "seatsBooked": 2
 }
 ```
 
@@ -283,7 +283,7 @@ Content-Type: application/json
 
 ```json
 {
-	"status": "cancelled"
+  "status": "cancelled"
 }
 ```
 
@@ -295,7 +295,7 @@ Errors use JSON. Application and authorization errors generally look like:
 
 ```json
 {
-	"error": "Description of the problem"
+  "error": "Description of the problem"
 }
 ```
 
@@ -303,23 +303,21 @@ Validation errors may include details:
 
 ```json
 {
-	"error": "Invalid data",
-	"details": [
-		{ "message": "field is invalid" }
-	]
+  "error": "Invalid data",
+  "details": [{ "message": "field is invalid" }]
 }
 ```
 
 Common status codes:
 
-| Status | Meaning |
-| --- | --- |
-| `400` | Invalid JSON, missing/invalid fields, or an unsupported state change. |
-| `401` | Missing, malformed, expired, or invalid access token; invalid credentials; or invalid refresh token. |
-| `403` | The user's role or ownership does not permit the operation. |
-| `404` | The requested event, booking, or user was not found. |
-| `409` | The requested booking exceeds available event capacity. |
-| `500` | Unexpected server or database error. |
+| Status | Meaning                                                                                              |
+| ------ | ---------------------------------------------------------------------------------------------------- |
+| `400`  | Invalid JSON, missing/invalid fields, or an unsupported state change.                                |
+| `401`  | Missing, malformed, expired, or invalid access token; invalid credentials; or invalid refresh token. |
+| `403`  | The user's role or ownership does not permit the operation.                                          |
+| `404`  | The requested event, booking, or user was not found.                                                 |
+| `409`  | The requested booking exceeds available event capacity.                                              |
+| `500`  | Unexpected server or database error.                                                                 |
 
 Send a JSON object directly with `Content-Type: application/json`. Do not wrap the whole object in quotes or JSON-stringify it more than once.
 
@@ -341,5 +339,6 @@ Do not run the integration suites against a production database. `npm test` is t
 - Passwords are stored as bcrypt hashes; access tokens are signed JWTs; refresh tokens are stored in PostgreSQL with expiration times and rotated when refreshed.
 - Helmet security headers and IP-based rate limits are enabled. CORS currently allows every origin; restrict this to trusted application origins before production deployment.
 - Booking capacity changes are currently separate database operations, not one transaction with row locking. Concurrent requests may race for the last seats; use a PostgreSQL transaction and `SELECT ... FOR UPDATE` before relying on this API for high-volume sales.
+- Signup requires a role but does not currently validate it against a strict enum. Use only `attendee` or `organizer`; those are the roles recognized by route authorization.
 - Migration scripts are standalone and are not run automatically when the server starts.
 - Event read routes currently require authentication, even though the conceptual project brief describes event browsing as public.
