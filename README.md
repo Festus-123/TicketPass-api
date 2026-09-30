@@ -126,7 +126,7 @@ Start without nodemon:
 npm start
 ```
 
-Both scripts load `.env` and start `src/index.js`. By default the API listens at `http://localhost:3000`.
+Both scripts start `src/index.js`. `npm run dev` loads the local `.env` file; `npm start` uses environment variables already provided by the shell or hosting platform (such as Railway). Configure `DATABASE_URL`, `JWT_SECRET`, and `ACCESS_TOKEN_EXPIRY` in the Railway service's Variables settings. By default the API listens at `http://localhost:3000`.
 
 Health check:
 
